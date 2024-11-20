@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:proyecto_live_together/screens/login/login.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,15 +15,15 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController descripcionController = TextEditingController();
 
   void navigateToAtrapa(BuildContext context) {
-    Navigator.pushNamed(context, '/atrapa');
+    
   }
 
   void onSubmit() {
     print('Estado: $selectedEstado');
     print('Localidad: $selectedLocalidad');
-    print('Categoría: $selectedCategoria');
+    print('Categorï¿½a: $selectedCategoria');
     print('Costo: ${costoController.text}');
-    print('Descripción: ${descripcionController.text}');
+    print('Descripciï¿½n: ${descripcionController.text}');
   }
 
   @override
@@ -51,9 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     IconButton(
                       icon: FaIcon(FontAwesomeIcons.user, color: Colors.white),
-                      onPressed: () => navigateToAtrapa(context),
+                      onPressed: () => navigateToAtrapa (context),
                     ),
-                    Text('Iniciar Sesión',
+                    Text('Iniciar Sesiï¿½n',
                         style: TextStyle(color: Colors.white)),
                   ],
                 ),
@@ -75,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: FaIcon(FontAwesomeIcons.star, color: Colors.white),
                       onPressed: () => navigateToAtrapa(context),
                     ),
-                    Text('Membrecía', style: TextStyle(color: Colors.white)),
+                    Text('Membrecï¿½a', style: TextStyle(color: Colors.white)),
                   ],
                 ),
               ],
@@ -141,14 +142,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(width: 8),
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(labelText: 'Categoría'),
+                    decoration: InputDecoration(labelText: 'Categorï¿½a'),
                     items: [
                       DropdownMenuItem(
                           value: 'En espera', child: Text('En espera')),
                       DropdownMenuItem(
-                          value: 'Opción 1', child: Text('Opción 1')),
+                          value: 'Opciï¿½n 1', child: Text('Opciï¿½n 1')),
                       DropdownMenuItem(
-                          value: 'Opción 2', child: Text('Opción 2')),
+                          value: 'Opciï¿½n 2', child: Text('Opciï¿½n 2')),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -160,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             SizedBox(height: 16),
-            // Segunda fila: Campos de texto y botón
+            // Segunda fila: Campos de texto y botï¿½n
             Row(
               children: [
                 Expanded(
@@ -178,8 +179,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: TextField(
                     controller: descripcionController,
                     decoration: InputDecoration(
-                      labelText: 'Descripción',
-                      hintText: 'Ingrese una descripción',
+                      labelText: 'Descripciï¿½n',
+                      hintText: 'Ingrese una descripciï¿½n',
                     ),
                   ),
                 ),
@@ -195,4 +196,5 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  
 }
