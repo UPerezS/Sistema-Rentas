@@ -52,9 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     IconButton(
                       icon: FaIcon(FontAwesomeIcons.user, color: Colors.white),
-                      onPressed: () => navigateToAtrapa (context),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  LoginScreen()), // Reemplaza con el nombre de tu pantalla de login
+                        );
+                      },
                     ),
-                    Text('Iniciar Sesi�n',
+                    Text('Iniciar Sesión',
                         style: TextStyle(color: Colors.white)),
                   ],
                 ),
