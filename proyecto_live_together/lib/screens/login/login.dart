@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginScreen extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   void navigateToRegister(BuildContext context) {
@@ -27,7 +27,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   void login(BuildContext context) {
-    String username = usernameController.text;
+    String username = emailController.text;
     String password = passwordController.text;
 
     // Aquí puedes agregar lógica de autenticación
@@ -49,8 +49,8 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextFormField(
-              controller: usernameController,
-              decoration: InputDecoration(labelText: 'Usuario'),
+              controller: emailController,
+              decoration: InputDecoration(labelText: 'Correo'),
             ),
             TextFormField(
               controller: passwordController,

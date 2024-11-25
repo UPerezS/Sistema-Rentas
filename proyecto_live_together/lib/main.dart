@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_live_together/screens/home/home.dart';
-// import 'package:proyecto_live_together/config/mysql_conexion.dart';
+import 'package:proyecto_live_together/config/mysql_conexion.dart';
+import 'package:proyecto_live_together/screens/registerForRent/registerForRent.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // final MySQLService mysqlService = MySQLService();
-  // await mysqlService.getConnection();
+  final MySQLService mysqlService = MySQLService();
+  await mysqlService.getConnection();
   runApp(const MyApp());
 }
 
