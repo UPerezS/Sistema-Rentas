@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_live_together/screens/home/home.dart';
 import 'package:proyecto_live_together/screens/register/resgister.dart';
 import 'package:proyecto_live_together/service/usuario_service.dart';
 
@@ -45,9 +46,18 @@ class LoginScreen extends StatelessWidget {
       );
 
       if (loginExitoso) {
+        // Mostrar el SnackBar con el mensaje de éxito
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Inicio de sesión exitoso.")),
+        SnackBar(content: Text("Inicio de sesión exitoso."))
+      );
+
+      // Redirigir al HomeScreen después de 2 segundos
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()), // Reemplazar con HomeScreen
         );
+      });      
 
         // Aquí puedes navegar a la pantalla principal o realizar alguna acción
         // Ejemplo: Navigator.pushReplacementNamed(context, '/home');
