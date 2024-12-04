@@ -15,7 +15,7 @@
 //   final TextEditingController descripcionController = TextEditingController();
 
 //   void navigateToAtrapa(BuildContext context) {
-    
+
 //   }
 
 //   void onSubmit() {
@@ -203,12 +203,13 @@
 //       ),
 //     );
 //   }
-  
+
 // }
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_live_together/screens/login/login.dart';
+import 'package:proyecto_live_together/screens/productScreen/productScreen.dart';
 import 'package:proyecto_live_together/service/publicacion_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -227,7 +228,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    publicacionesFuture = _fetchPublicaciones(); // Cargar publicaciones al iniciar
+    publicacionesFuture =
+        _fetchPublicaciones(); // Cargar publicaciones al iniciar
   }
 
   Future<List<Map<String, dynamic>>> _fetchPublicaciones() {
@@ -272,18 +274,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
                         );
                       },
                     ),
-                    Text('Iniciar Sesión', style: TextStyle(color: Colors.white)),
+                    Text('Iniciar Sesión',
+                        style: TextStyle(color: Colors.white)),
                   ],
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: FaIcon(FontAwesomeIcons.comments, color: Colors.white),
+                      icon: FaIcon(FontAwesomeIcons.comments,
+                          color: Colors.white),
                       onPressed: () {
                         // Agrega la acción para navegar si es necesario
                       },
@@ -331,9 +336,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(labelText: 'Ubicación'),
                     items: [
-                      DropdownMenuItem(value: 'En espera', child: Text('En espera')),
-                      DropdownMenuItem(value: 'Ciudad A', child: Text('Ciudad A')),
-                      DropdownMenuItem(value: 'Ciudad B', child: Text('Ciudad B')),
+                      DropdownMenuItem(
+                          value: 'En espera', child: Text('En espera')),
+                      DropdownMenuItem(
+                          value: 'Ciudad A', child: Text('Ciudad A')),
+                      DropdownMenuItem(
+                          value: 'Ciudad B', child: Text('Ciudad B')),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -379,21 +387,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(child: Text('Error al cargar publicaciones'));
                   }
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No hay publicaciones disponibles'));
+                    return Center(
+                        child: Text('No hay publicaciones disponibles'));
                   }
 
                   final publicaciones = snapshot.data!;
 
                   return ListView.builder(
-                    itemCount: publicaciones.length,
+                    itemCount: publicaciones
+                        .length, // Cantidad de publicaciones consultadas
                     itemBuilder: (context, index) {
-                      final publicacion = publicaciones[index];
+                      final publicacion =
+                          publicaciones[index]; // Obtén la publicación actual
                       return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        margin: EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
                         child: ListTile(
                           title: Text(publicacion['titulo'] ?? 'Sin título'),
-                          subtitle: Text(publicacion['descripcion'] ?? 'Sin descripción'),
+                          subtitle: Text(
+                              publicacion['descripcion'] ?? 'Sin descripción'),
                           trailing: Text('\$${publicacion['costo'] ?? '0'}'),
+                          onTap: () {
+                            final id = int.tryParse(
+                                publicacion['idPublicacion'].toString());
+                            if (id != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductScreen(id: id),
+                                ),
+                              );
+                            } else {
+                              print("Error: El id no es válido");
+                            }
+                          },
                         ),
                       );
                     },
