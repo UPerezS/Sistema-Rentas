@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:proyecto_live_together/screens/home/home.dart';
+import '../../service/regPub.dart';
 
 class PropertyRegistrationPage extends StatefulWidget {
   @override
-  _PropertyRegistrationPageState createState() => _PropertyRegistrationPageState();
+  _PropertyRegistrationPageState createState() =>
+      _PropertyRegistrationPageState();
 }
 
 class _PropertyRegistrationPageState extends State<PropertyRegistrationPage> {
@@ -13,27 +14,34 @@ class _PropertyRegistrationPageState extends State<PropertyRegistrationPage> {
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
   final _locationController = TextEditingController();
-  List<File> _selectedImages = [];
 
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> _pickImages() async {
-    final List<XFile>? images = await _picker.pickMultiImage();
-    if (images != null) {
-      setState(() {
-        _selectedImages = images.map((image) => File(image.path)).toList();
-      });
-    }
-  }
-
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Aquí se puede procesar la información
-      print('Título: ${_titleController.text}');
-      print('Descripción: ${_descriptionController.text}');
-      print('Precio: ${_priceController.text}');
-      print('Ubicación: ${_locationController.text}');
-      print('Imágenes seleccionadas: ${_selectedImages.length}');
+      try {
+        await PublicacionService.registrarPublicacion(
+          titulo: _titleController.text,
+          descripcion: _descriptionController.text,
+          costo: double.parse(_priceController.text),
+          ubicacion: _locationController.text,
+          idUsuario: 1, // Cambia por el ID del usuario actual si es necesario
+        );
+
+        // Mostrar notificación de éxito
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Publicación registrada exitosamente')),
+        );
+
+        // Navegar a la pantalla Home
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+          (route) => false, // Elimina todas las pantallas anteriores de la pila
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al registrar publicación: $e')),
+        );
+      }
     }
   }
 
@@ -78,6 +86,9 @@ class _PropertyRegistrationPageState extends State<PropertyRegistrationPage> {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa el precio';
                   }
+                  if (double.tryParse(value) == null) {
+                    return 'Por favor ingresa un precio válido';
+                  }
                   return null;
                 },
               ),
@@ -89,29 +100,6 @@ class _PropertyRegistrationPageState extends State<PropertyRegistrationPage> {
                     return 'Por favor ingresa la ubicación';
                   }
                   return null;
-                },
-              ),
-              SizedBox(height: 16),
-              Text('Imágenes seleccionadas: ${_selectedImages.length}'),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _pickImages,
-                child: Text('Seleccionar Imágenes'),
-              ),
-              SizedBox(height: 16),
-              GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                ),
-                itemCount: _selectedImages.length,
-                itemBuilder: (context, index) {
-                  return Image.file(
-                    _selectedImages[index],
-                    fit: BoxFit.cover,
-                  );
                 },
               ),
               SizedBox(height: 16),
