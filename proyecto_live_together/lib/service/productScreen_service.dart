@@ -107,4 +107,89 @@ class ProductoService {
       await conn.close();
     }
   }
+
+  // Obtener las publicaciones de un usuario
+  static Future<List<Map<String, dynamic>>> obtenerPublicacionesUsuario(
+      int idUsuario) async {
+    final MySQLService mysqlService = MySQLService();
+    final conn = await mysqlService.getConnection();
+
+    try {
+      String query = """
+        SELECT idPublicacion, titulo, costo, ubicacion
+        FROM publicaciones
+        WHERE idUsuario = :idUsuario
+      """;
+
+      final result = await conn.execute(query, {'idUsuario': idUsuario});
+
+      return result.rows.map((row) {
+        return {
+          'idPublicacion': row.colByName('idPublicacion'),
+          'titulo': row.colByName('titulo'),
+          'costo': row.colByName('costo'),
+          'ubicacion': row.colByName('ubicacion'),
+        };
+      }).toList();
+    } catch (e) {
+      print("Error al obtener publicaciones del usuario: $e");
+      throw e;
+    } finally {
+      await conn.close();
+    }
+  }
+
+  // Eliminar una publicación
+  static Future<void> eliminarProducto(int idPublicacion) async {
+    final MySQLService mysqlService = MySQLService();
+    final conn = await mysqlService.getConnection();
+
+    try {
+      String query = """
+        DELETE FROM publicaciones
+        WHERE idPublicacion = :idPublicacion
+      """;
+
+      await conn.execute(query, {'idPublicacion': idPublicacion});
+      print("Publicación eliminada correctamente.");
+    } finally {
+      await conn.close();
+    }
+  }
+
+  // Editar una publicación
+  static Future<void> editarProducto({
+    required int idPublicacion,
+    required String titulo,
+    required String descripcion,
+    required double costo,
+    required String ubicacion,
+  }) async {
+    final MySQLService mysqlService = MySQLService();
+    final conn = await mysqlService.getConnection();
+
+    try {
+      String query = """
+        UPDATE publicaciones
+        SET titulo = :titulo,
+            descripcion = :descripcion,
+            costo = :costo,
+            ubicacion = :ubicacion
+        WHERE idPublicacion = :idPublicacion
+      """;
+
+      await conn.execute(query, {
+        'idPublicacion': idPublicacion,
+        'titulo': titulo,
+        'descripcion': descripcion,
+        'costo': costo,
+        'ubicacion': ubicacion,
+      });
+
+      print("Publicación actualizada correctamente.");
+    } finally {
+      await conn.close();
+    }
+  }
+
 }
