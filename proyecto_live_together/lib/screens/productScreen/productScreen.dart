@@ -1,168 +1,166 @@
 import 'package:flutter/material.dart';
+import '../../service/productScreen_service.dart';
 
 class ProductScreen extends StatelessWidget {
+  final int id;
+  final int? idUsuario; // Puede ser nulo
+
+  ProductScreen({required this.id, this.idUsuario});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product Details', style: TextStyle(color: Colors.black)),
+        title: Text('Detalles del Producto', style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Imagen del producto
-            Image.network(
-              'https://via.placeholder.com/400x300', // Reemplazar con tu imagen
-              width: double.infinity,
-              height: 250,
-              fit: BoxFit.cover,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Precio
-                  Text(
-                    '\$200',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  // Título del producto
-                  Text(
-                    'Mid-Century Modern Armchair',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  // Ubicación
-                  Row(
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: ProductoService.obtenerDetallesProducto(id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error al cargar el producto.'));
+          }
+          if (!snapshot.hasData) {
+            return Center(child: Text('Producto no encontrado.'));
+          }
+
+          final producto = snapshot.data!;
+          
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Carrusel de imágenes
+                FutureBuilder<List<String>>(
+                  future: ProductoService.obtenerImagenes(id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error al cargar las imágenes.'));
+                    }
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No hay imágenes disponibles.'));
+                    }
+
+                    final imagenes = snapshot.data!;
+                    return Container(
+                      height: 250,
+                      child: PageView.builder(
+                        itemCount: imagenes.length,
+                        itemBuilder: (context, index) {
+                          return Image.network(
+                            imagenes[index],
+                            width: double.infinity,
+                            height: 250,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.location_on, color: Colors.grey, size: 20),
-                      SizedBox(width: 4),
                       Text(
-                        'San Francisco, CA (94115)',
-                        style: TextStyle(color: Colors.grey[600]),
+                        '\$${producto['costo']}',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        producto['titulo'],
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on, color: Colors.grey, size: 20),
+                          SizedBox(width: 4),
+                          Text(producto['ubicacion'], style: TextStyle(color: Colors.grey[600])),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        producto['descripcion'],
+                        style: TextStyle(fontSize: 16, color: Colors.grey[800]),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
-                  // Descripción
-                  Text(
-                    'Mid-century modern armchair in like new condition. Dark stained walnut wood with light blue wool upholstery. Local pickup only.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[800]),
-                  ),
-                  SizedBox(height: 16),
-                  // Botones
-                  Row(
+                ),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
                     children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: Text('Make Offer', style: TextStyle(fontSize: 16)),
-                        ),
+                      CircleAvatar(
+                        radius: 30,
+                        child: Text(producto['vendedor'][0]), // Inicial del vendedor
                       ),
                       SizedBox(width: 16),
                       Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: Text('Message Seller', style: TextStyle(fontSize: 16)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              producto['vendedor'],
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 4),
+                            Text(producto['correo'], style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                            SizedBox(height: 4),
+                            Text(producto['telefono'], style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                Divider(),
+                idUsuario != null ? FutureBuilder<bool>(
+                  future: ProductoService.puedeEditarEliminar(id, idUsuario),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError || snapshot.data == false) {
+                      return SizedBox(); // No mostrar nada si no tiene permisos
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              // Lógica para editar
+                            },
+                            child: Text('Editar'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Lógica para eliminar
+                            },
+                            child: Text('Eliminar'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ) : SizedBox(), // No mostrar botones de edición/eliminación si idUsuario es nulo
+              ],
             ),
-            // Mapa
-            Container(
-              height: 200,
-              color: Colors.grey[200], // Simula el fondo del mapa
-              child: Center(
-                child: Icon(Icons.map, size: 50, color: Colors.grey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.save, color: Colors.grey),
-                    label: Text('Save Item', style: TextStyle(color: Colors.grey)),
-                  ),
-                  TextButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.share, color: Colors.grey),
-                    label: Text('Share Item', style: TextStyle(color: Colors.grey)),
-                  ),
-                ],
-              ),
-            ),
-            Divider(),
-            // Información del vendedor
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                      'https://via.placeholder.com/150', // Imagen del vendedor
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Whitney Trump',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '2 mutual friends including Chris Tanner and Dancy Li',
-                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Icons.check_circle, color: Colors.green, size: 16),
-                            SizedBox(width: 4),
-                            Text(
-                              'Very Responsive to messages. Typically replies within an hour.',
-                              style: TextStyle(fontSize: 12, color: Colors.green[800]),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Divider(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

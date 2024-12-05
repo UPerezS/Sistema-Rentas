@@ -414,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ProductScreen(id: id),
+                                  builder: (context) => ProductScreen(id: id, idUsuario: 1),
                                 ),
                               );
                             } else {
