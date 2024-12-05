@@ -1,211 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:proyecto_live_together/screens/login/login.dart';
-
-// class HomeScreen extends StatefulWidget {
-//   @override
-//   _HomeScreenState createState() => _HomeScreenState();
-// }
-
-// class _HomeScreenState extends State<HomeScreen> {
-//   String? selectedEstado;
-//   String? selectedLocalidad;
-//   String? selectedCategoria;
-//   final TextEditingController costoController = TextEditingController();
-//   final TextEditingController descripcionController = TextEditingController();
-
-//   void navigateToAtrapa(BuildContext context) {
-
-//   }
-
-//   void onSubmit() {
-//     print('Estado: $selectedEstado');
-//     print('Localidad: $selectedLocalidad');
-//     print('Categor锟絘: $selectedCategoria');
-//     print('Costo: ${costoController.text}');
-//     print('Descripci锟絥: ${descripcionController.text}');
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.blueAccent,
-//         toolbarHeight: 80,
-//         actions: [
-//           Expanded(
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: [
-//                 Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     IconButton(
-//                       icon: FaIcon(FontAwesomeIcons.home, color: Colors.white),
-//                       onPressed: () => navigateToAtrapa(context),
-//                     ),
-//                     Text('Inicio', style: TextStyle(color: Colors.white)),
-//                   ],
-//                 ),
-//                 Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     IconButton(
-//                       icon: FaIcon(FontAwesomeIcons.user, color: Colors.white),
-//                       onPressed: () {
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                               builder: (context) =>
-//                                   LoginScreen()), // Reemplaza con el nombre de tu pantalla de login
-//                         );
-//                       },
-//                     ),
-//                     Text('Iniciar Sesi贸n',
-//                         style: TextStyle(color: Colors.white)),
-//                   ],
-//                 ),
-//                 Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     IconButton(
-//                       icon: FaIcon(FontAwesomeIcons.comments,
-//                           color: Colors.white),
-//                       onPressed: () => navigateToAtrapa(context),
-//                     ),
-//                     Text('Chat', style: TextStyle(color: Colors.white)),
-//                   ],
-//                 ),
-//                 Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   children: [
-//                     IconButton(
-//                       icon: FaIcon(FontAwesomeIcons.star, color: Colors.white),
-//                       onPressed: () => navigateToAtrapa(context),
-//                     ),
-//                     Text('Membrec锟絘', style: TextStyle(color: Colors.white)),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             SizedBox(height: 20),
-//             Text(
-//               'Filtros',
-//               style: TextStyle(
-//                 fontSize: 28,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.blueAccent,
-//                 letterSpacing: 1.5,
-//               ),
-//             ),
-//             SizedBox(height: 20),
-//             // Primera fila: Dropdowns
-//             Row(
-//               children: [
-//                 Expanded(
-//                   child: DropdownButtonFormField<String>(
-//                     decoration: InputDecoration(labelText: 'Estado'),
-//                     items: [
-//                       DropdownMenuItem(
-//                           value: 'En espera', child: Text('En espera')),
-//                       DropdownMenuItem(value: 'Activo', child: Text('Activo')),
-//                       DropdownMenuItem(
-//                           value: 'Finalizado', child: Text('Finalizado')),
-//                     ],
-//                     onChanged: (value) {
-//                       setState(() {
-//                         selectedEstado = value;
-//                       });
-//                     },
-//                   ),
-//                 ),
-//                 SizedBox(width: 8),
-//                 Expanded(
-//                   child: DropdownButtonFormField<String>(
-//                     decoration: InputDecoration(labelText: 'Localidad'),
-//                     items: [
-//                       DropdownMenuItem(
-//                           value: 'En espera', child: Text('En espera')),
-//                       DropdownMenuItem(
-//                           value: 'Ciudad A', child: Text('Ciudad A')),
-//                       DropdownMenuItem(
-//                           value: 'Ciudad B', child: Text('Ciudad B')),
-//                     ],
-//                     onChanged: (value) {
-//                       setState(() {
-//                         selectedLocalidad = value;
-//                       });
-//                     },
-//                   ),
-//                 ),
-//                 SizedBox(width: 8),
-//                 Expanded(
-//                   child: DropdownButtonFormField<String>(
-//                     decoration: InputDecoration(labelText: 'Categor锟絘'),
-//                     items: [
-//                       DropdownMenuItem(
-//                           value: 'En espera', child: Text('En espera')),
-//                       DropdownMenuItem(
-//                           value: 'Opci锟絥 1', child: Text('Opci锟絥 1')),
-//                       DropdownMenuItem(
-//                           value: 'Opci锟絥 2', child: Text('Opci锟絥 2')),
-//                     ],
-//                     onChanged: (value) {
-//                       setState(() {
-//                         selectedCategoria = value;
-//                       });
-//                     },
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             SizedBox(height: 16),
-//             // Segunda fila: Campos de texto y bot锟絥
-//             Row(
-//               children: [
-//                 Expanded(
-//                   child: TextField(
-//                     controller: costoController,
-//                     decoration: InputDecoration(
-//                       labelText: 'Costo',
-//                       hintText: 'Ingrese el costo',
-//                     ),
-//                     keyboardType: TextInputType.number,
-//                   ),
-//                 ),
-//                 SizedBox(width: 8),
-//                 Expanded(
-//                   child: TextField(
-//                     controller: descripcionController,
-//                     decoration: InputDecoration(
-//                       labelText: 'Descripci锟絥',
-//                       hintText: 'Ingrese una descripci锟絥',
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(width: 8),
-//                 ElevatedButton(
-//                   onPressed: onSubmit,
-//                   child: Text('Enviar'),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-// }
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_live_together/screens/login/login.dart';
@@ -233,14 +25,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Map<String, dynamic>>> _fetchPublicaciones() {
-    // Simulaci贸n de la carga de publicaciones
     return PublicacionService.listarPublicaciones();
   }
 
-  void onSubmit() {
-    print('Localidad: $selectedLocalidad');
-    print('Costo: ${costoController.text}');
-    // Aqu铆 puedes agregar l贸gica para filtrar las publicaciones con los datos de los filtros
+  // M閠odo para aplicar filtros
+  Future<void> aplicarFiltros() async {
+    try {
+      double? costoMaximo = double.tryParse(costoController.text);
+      String? ubicacionSeleccionada = selectedLocalidad;
+
+      List<Map<String, dynamic>> publicacionesFiltradas =
+          await PublicacionService.filtrarPublicaciones(
+        costoMaximo: costoMaximo,
+        ubicacion: ubicacionSeleccionada,
+      );
+
+      setState(() {
+        publicacionesFuture = Future.value(publicacionesFiltradas);
+      });
+    } catch (e) {
+      print("Error al aplicar filtros: $e");
+    }
   }
 
   @override
@@ -259,9 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     IconButton(
                       icon: FaIcon(FontAwesomeIcons.home, color: Colors.white),
-                      onPressed: () {
-                        // Agrega la acci贸n para navegar si es necesario
-                      },
+                      onPressed: () {},
                     ),
                     Text('Inicio', style: TextStyle(color: Colors.white)),
                   ],
@@ -279,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    Text('Iniciar Sesi贸n',
+                    Text('Iniciar Sesion',
                         style: TextStyle(color: Colors.white)),
                   ],
                 ),
@@ -290,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: FaIcon(FontAwesomeIcons.comments,
                           color: Colors.white),
                       onPressed: () {
-                        // Agrega la acci贸n para navegar si es necesario
+                        // Agrega la acci髇 para navegar si es necesario
                       },
                     ),
                     Text('Chat', style: TextStyle(color: Colors.white)),
@@ -302,10 +105,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     IconButton(
                       icon: FaIcon(FontAwesomeIcons.star, color: Colors.white),
                       onPressed: () {
-                        // Agrega la acci贸n para navegar si es necesario
+                        // Agrega la acci髇 para navegar si es necesario
                       },
                     ),
-                    Text('Membres铆a', style: TextStyle(color: Colors.white)),
+                    Text('Membres韆', style: TextStyle(color: Colors.white)),
                   ],
                 ),
               ],
@@ -329,12 +132,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 20),
-            // Filtros: Dropdowns
+            // Filtros: Dropdowns y campo de texto
             Row(
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(labelText: 'Ubicaci贸n'),
+                    decoration: InputDecoration(labelText: 'Ubicacion'),
                     items: [
                       DropdownMenuItem(
                           value: 'En espera', child: Text('En espera')),
@@ -350,27 +153,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-                SizedBox(width: 16), // Ajustado el espacio entre los dropdowns
-              ],
-            ),
-            SizedBox(height: 16),
-            // Campo de texto y bot贸n para costo
-            Row(
-              children: [
+                SizedBox(width: 16),
                 Expanded(
                   child: TextField(
                     controller: costoController,
                     decoration: InputDecoration(
                       labelText: 'Costo',
-                      hintText: 'Ingrese el costo',
+                      hintText: 'Ingrese el costo m醲imo',
                     ),
                     keyboardType: TextInputType.number,
                   ),
                 ),
                 SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: onSubmit,
-                  child: Text('Enviar'),
+                  onPressed: aplicarFiltros, // Llamar al m閠odo de filtros
+                  child: Text('Aplicar filtros'),
                 ),
               ],
             ),
@@ -394,18 +191,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   final publicaciones = snapshot.data!;
 
                   return ListView.builder(
-                    itemCount: publicaciones
-                        .length, // Cantidad de publicaciones consultadas
+                    itemCount:
+                        publicaciones.length, // Cantidad de publicaciones
                     itemBuilder: (context, index) {
                       final publicacion =
-                          publicaciones[index]; // Obt茅n la publicaci贸n actual
+                          publicaciones[index]; // Publicaci髇 actual
+                      final List<dynamic> imagenes =
+                          publicacion['imagenes'] ?? []; // Lista de im醙enes
+                      final String imagenUrl = imagenes.isNotEmpty
+                          ? imagenes.first // Usa la primera imagen si existe
+                          : 'https://via.placeholder.com/150'; // Imagen predeterminada
+
                       return Card(
                         margin: EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         child: ListTile(
-                          title: Text(publicacion['titulo'] ?? 'Sin t铆tulo'),
-                          subtitle: Text(
-                              publicacion['descripcion'] ?? 'Sin descripci贸n'),
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              imagenUrl,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(Icons.image_not_supported,
+                                    size: 60, color: Colors.grey);
+                              },
+                            ),
+                          ),
+                          title: Text(publicacion['titulo'] ?? 'Sin t韙ulo'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(publicacion['descripcion'] ??
+                                  'Sin descripci髇'),
+                              SizedBox(height: 4),
+                              Text('Ubicaci髇: ${publicacion['ubicacion']}'),
+                            ],
+                          ),
                           trailing: Text('\$${publicacion['costo'] ?? '0'}'),
                           onTap: () {
                             final id = int.tryParse(
@@ -414,11 +237,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ProductScreen(id: id, idUsuario: 1),
+                                  builder: (context) =>
+                                      ProductScreen(id: id, idUsuario: 1),
                                 ),
                               );
                             } else {
-                              print("Error: El id no es v谩lido");
+                              print("Error: El id no es v醠ido");
                             }
                           },
                         ),
