@@ -3,6 +3,11 @@ import 'package:proyecto_live_together/screens/home/home.dart';
 import '../../service/regPub.dart';
 
 class PropertyRegistrationPage extends StatefulWidget {
+
+  final int idUsuario;
+
+  PropertyRegistrationPage({required this.idUsuario});
+
   @override
   _PropertyRegistrationPageState createState() =>
       _PropertyRegistrationPageState();
@@ -23,7 +28,7 @@ class _PropertyRegistrationPageState extends State<PropertyRegistrationPage> {
           descripcion: _descriptionController.text,
           costo: double.parse(_priceController.text),
           ubicacion: _locationController.text,
-          idUsuario: 1, // Cambia por el ID del usuario actual si es necesario
+          idUsuario: widget.idUsuario // Cambia por el ID del usuario actual si es necesario
         );
 
         // Mostrar notificación de éxito
