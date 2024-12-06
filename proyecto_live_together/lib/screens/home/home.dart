@@ -1,8 +1,12 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_live_together/screens/login/login.dart';
+import 'package:proyecto_live_together/screens/mi_perfil/mi_perfil.dart';
 import 'package:proyecto_live_together/screens/productScreen/productScreen.dart';
+import 'package:proyecto_live_together/screens/registerForRent/registerForRent.dart';
 import 'package:proyecto_live_together/service/publicacion_service.dart';
+import 'package:proyecto_live_together/utils/session.dart'; 
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,9 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController costoController = TextEditingController();
   final TextEditingController descripcionController = TextEditingController();
   late Future<List<Map<String, dynamic>>> publicacionesFuture;
+  int? userId = Session().userId;
 
   @override
   void initState() {
+    
     super.initState();
     publicacionesFuture =
         _fetchPublicaciones(); // Cargar publicaciones al iniciar
@@ -28,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return PublicacionService.listarPublicaciones();
   }
 
-  // Método para aplicar filtros
+  // Mï¿½todo para aplicar filtros
   Future<void> aplicarFiltros() async {
     try {
       double? costoMaximo = double.tryParse(costoController.text);
@@ -69,23 +75,43 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text('Inicio', style: TextStyle(color: Colors.white)),
                   ],
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: FaIcon(FontAwesomeIcons.user, color: Colors.white),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
-                        );
-                      },
-                    ),
-                    Text('Iniciar Sesion',
-                        style: TextStyle(color: Colors.white)),
-                  ],
-                ),
+                
+Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    IconButton(
+      icon: FaIcon(
+        userId != null
+            ? FontAwesomeIcons.userCircle // Icono para "Mi perfil"
+            : FontAwesomeIcons.user, // Icono para "Iniciar sesiÃ³n"
+        color: Colors.white,
+      ),
+      onPressed: () {
+        if (userId != null) {
+          // Si el usuario estÃ¡ autenticado, navegar a "Mi perfil"
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MiPerfil(idUsuario: userId,)), // Cambiar a la pantalla de perfil
+          );
+        } else {
+          // Si no estÃ¡ autenticado, navegar a "Iniciar sesiÃ³n"
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LoginScreen()), // Mantener la pantalla de login
+          );
+        }
+      },
+    ),
+    Text(
+      userId != null ? 'Mi Perfil' : 'Iniciar SesiÃ³n', // Texto dinÃ¡mico
+      style: TextStyle(color: Colors.white),
+    ),
+  ],
+),
+
+
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -93,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: FaIcon(FontAwesomeIcons.comments,
                           color: Colors.white),
                       onPressed: () {
-                        // Agrega la acción para navegar si es necesario
+                        // Agrega la acciï¿½n para navegar si es necesario
                       },
                     ),
                     Text('Chat', style: TextStyle(color: Colors.white)),
@@ -105,10 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     IconButton(
                       icon: FaIcon(FontAwesomeIcons.star, color: Colors.white),
                       onPressed: () {
-                        // Agrega la acción para navegar si es necesario
+                        // Agrega la acciï¿½n para navegar si es necesario
                       },
                     ),
-                    Text('Membresía', style: TextStyle(color: Colors.white)),
+                    Text('Membresï¿½a', style: TextStyle(color: Colors.white)),
                   ],
                 ),
               ],
@@ -159,14 +185,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     controller: costoController,
                     decoration: InputDecoration(
                       labelText: 'Costo',
-                      hintText: 'Ingrese el costo máximo',
+                      hintText: 'Ingrese el costo mï¿½ximo',
                     ),
                     keyboardType: TextInputType.number,
                   ),
                 ),
                 SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: aplicarFiltros, // Llamar al método de filtros
+                  onPressed: aplicarFiltros, // Llamar al mï¿½todo de filtros
                   child: Text('Aplicar filtros'),
                 ),
               ],
@@ -195,9 +221,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         publicaciones.length, // Cantidad de publicaciones
                     itemBuilder: (context, index) {
                       final publicacion =
-                          publicaciones[index]; // Publicación actual
+                          publicaciones[index]; // Publicaciï¿½n actual
                       final List<dynamic> imagenes =
-                          publicacion['imagenes'] ?? []; // Lista de imágenes
+                          publicacion['imagenes'] ?? []; // Lista de imï¿½genes
                       final String imagenUrl = imagenes.isNotEmpty
                           ? imagenes.first // Usa la primera imagen si existe
                           : 'https://via.placeholder.com/150'; // Imagen predeterminada
@@ -219,14 +245,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             ),
                           ),
-                          title: Text(publicacion['titulo'] ?? 'Sin título'),
+                          title: Text(publicacion['titulo'] ?? 'Sin tï¿½tulo'),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(publicacion['descripcion'] ??
-                                  'Sin descripción'),
+                                  'Sin descripciï¿½n'),
                               SizedBox(height: 4),
-                              Text('Ubicación: ${publicacion['ubicacion']}'),
+                              Text('Ubicaciï¿½n: ${publicacion['ubicacion']}'),
                             ],
                           ),
                           trailing: Text('\$${publicacion['costo'] ?? '0'}'),
@@ -238,11 +264,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      ProductScreen(id: id, idUsuario: 1),
+                                      ProductScreen(id: id, idUsuario: userId ?? null),
                                 ),
                               );
                             } else {
-                              print("Error: El id no es válido");
+                              print("Error: El id no es vï¿½lido");
                             }
                           },
                         ),
@@ -255,6 +281,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      floatingActionButton: userId != null
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PropertyRegistrationPage(idUsuario: userId,)),
+                );
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Colors.blueAccent,
+            )
+          : null,
     );
   }
 }

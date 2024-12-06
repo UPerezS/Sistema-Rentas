@@ -6,7 +6,7 @@ import '../../service/productScreen_service.dart';
 class MiPerfil extends StatelessWidget {
   final int idUsuario;
 
-  MiPerfil({required this.idUsuario});
+  MiPerfil({int? idUsuario}) : idUsuario = idUsuario ?? 0;
 
   @override
   Widget build(BuildContext context) {

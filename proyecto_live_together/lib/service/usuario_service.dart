@@ -40,40 +40,41 @@ class UsuarioService {
   }
 
   // Método para verificar credenciales (login)
-  static Future<bool> loginUsuario({
-    required String correo,
-    required String contrasena,
-  }) async {
-    final MySQLService mysqlService = MySQLService();
-    final conn = await mysqlService.getConnection();
+  static Future<int?> loginUsuario({
+  required String correo,
+  required String contrasena,
+}) async {
+  final MySQLService mysqlService = MySQLService();
+  final conn = await mysqlService.getConnection();
 
-    try {
-      // Encriptar la contraseña ingresada
-      var hashedPassword = sha256.convert(utf8.encode(contrasena)).toString();
+  try {
+    // Encriptar la contraseña ingresada
+    var hashedPassword = sha256.convert(utf8.encode(contrasena)).toString();
 
-      String query = """
-      SELECT COUNT(*) as count
+    String query = """
+      SELECT idUsuario
       FROM usuarios
       WHERE correo = :correo AND contrasena = :contrasena
     """;
 
-      final result = await conn.execute(query, {
-        'correo': correo,
-        'contrasena': hashedPassword,
-      });
+    final result = await conn.execute(query, {
+      'correo': correo,
+      'contrasena': hashedPassword,
+    });
 
-      // Verificar si hay filas y si el valor de COUNT es mayor que 0
-      if (result.rows.isNotEmpty) {
-        final count = result.rows.first.colAt(0);
-        return count != null && int.tryParse(count.toString())! > 0;
-      }
-
-      return false; // Si no hay filas, el usuario no existe o la contraseña no coincide
-    } catch (e) {
-      print("Error al iniciar sesión: $e");
-      throw e;
-    } finally {
-      await conn.close();
+    // Si hay filas, significa que las credenciales son válidas
+    if (result.rows.isNotEmpty) {
+      final idUsuario = result.rows.first.colAt(0); // Obtener el idUsuario
+      return int.tryParse(idUsuario.toString()); // Convertir a entero
     }
+
+    return null; // Si no hay filas, las credenciales no son válidas
+  } catch (e) {
+    print("Error al iniciar sesión: $e");
+    throw e;
+  } finally {
+    await conn.close();
   }
+}
+
 }

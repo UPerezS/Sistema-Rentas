@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proyecto_live_together/screens/home/home.dart';
 import 'package:proyecto_live_together/screens/register/resgister.dart';
 import 'package:proyecto_live_together/service/usuario_service.dart';
+import 'package:proyecto_live_together/utils/session.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,49 +30,48 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<void> login(BuildContext context) async {
-    String email = emailController.text;
-    String password = passwordController.text;
+  String email = emailController.text;
+  String password = passwordController.text;
 
-    if (email.isEmpty || password.isEmpty) {
+  if (email.isEmpty || password.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Por favor, ingresa tus credenciales.")),
+    );
+    return;
+  }
+
+  try {
+    int? userId = await UsuarioService.loginUsuario(
+      correo: email,
+      contrasena: password,
+    );
+
+    if (userId != null) {
+      // Guardar el idUsuario en la sesión global
+      Session().setUserId(userId);
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Por favor, ingresa tus credenciales.")),
-      );
-      return;
-    }
-
-    try {
-      bool loginExitoso = await UsuarioService.loginUsuario(
-        correo: email,
-        contrasena: password,
+        SnackBar(content: Text("Inicio de sesión exitoso.")),
       );
 
-      if (loginExitoso) {
-        // Mostrar el SnackBar con el mensaje de éxito
-        ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Inicio de sesión exitoso."))
-      );
-
-      // Redirigir al HomeScreen después de 2 segundos
       Future.delayed(Duration(seconds: 2), () {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()), // Reemplazar con HomeScreen
+          MaterialPageRoute(builder: (context) => HomeScreen()),
         );
-      });      
-
-        // Aquí puedes navegar a la pantalla principal o realizar alguna acción
-        // Ejemplo: Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Credenciales incorrectas.")),
-        );
-      }
-    } catch (e) {
+      });
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al iniciar sesión: $e")),
+        SnackBar(content: Text("Credenciales incorrectas.")),
       );
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error al iniciar sesión: $e")),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

@@ -34,7 +34,7 @@ class PublicacionService {
     }
   }
 
-  //  Método para listar publicaciones con sus imágenes
+  //  Mï¿½todo para listar publicaciones con sus imï¿½genes
   static Future<List<Map<String, dynamic>>> listarPublicaciones() async {
     final MySQLService mysqlService = MySQLService();
     final conn = await mysqlService.getConnection();
@@ -103,7 +103,7 @@ class PublicacionService {
     final conn = await mysqlService.getConnection();
 
     try {
-      // Construir la consulta SQL dinámica
+      // Construir la consulta SQL dinï¿½mica
       String query = """
       SELECT 
         p.idPublicacion, 
@@ -122,10 +122,10 @@ class PublicacionService {
       WHERE 1=1
       """;
 
-      // Lista de parámetros para la consulta
+      // Lista de parï¿½metros para la consulta
       Map<String, dynamic> params = {};
 
-      // Agregar condiciones de filtro dinámicamente
+      // Agregar condiciones de filtro dinï¿½micamente
       if (costoMaximo != null) {
         query += " AND p.costo <= :costoMaximo";
         params['costoMaximo'] = costoMaximo;

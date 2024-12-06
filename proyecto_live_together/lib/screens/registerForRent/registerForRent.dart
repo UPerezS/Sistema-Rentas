@@ -6,7 +6,7 @@ class PropertyRegistrationPage extends StatefulWidget {
 
   final int idUsuario;
 
-  PropertyRegistrationPage({required this.idUsuario});
+  PropertyRegistrationPage({int? idUsuario}) : idUsuario = idUsuario ?? 0;
 
   @override
   _PropertyRegistrationPageState createState() =>
